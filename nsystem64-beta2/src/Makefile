@@ -7,22 +7,10 @@ DEFINES=
 # SYSDEP= nStack-i386.o
 # MAKELIB= ar-ranlib
 # DEFINES=
-#
-# Para Sparc/Solaris
-# SYSDEP= nStack-sparc.o
-# MAKELIB= ar-lorder
-# DEFINES= -DREOPENSTDIO -DSOLARIS
-#
-# Para Sparc/SunOS 4.X.X:
-# SYSDEP= nStack-sparc.o
-# MAKELIB= ar-ranlib
-# DEFINES= -DREOPENSTDIO -DNO_UNDERSCORE
-# OBS. IMPORTANTE: el directorio /usr/ccs/bin debe ir antes que /bin
-# /usr/bin y /usr/local/bin en el path de busqueda de comandos
 
 #------ fin parte parte dependiente -----
 
-NSYSTEM= nProcess.o nTime.o nMsg.o nSem.o nMonitor.o nIO.o nDep.o \
+OBJS= nProcess.o nLRLock.o nTime.o nMsg.o nSem.o nMonitor.o nIO.o nDep.o \
          nMain.o nQueue.o nOther.o fifoqueues.o $(SYSDEP)
 LIBNSYS= libnSys.a
 
@@ -43,9 +31,11 @@ all: $(LIBNSYS)
 .c.o .s.o:
 	gcc -c $(CFLAGS) $<
 
-$(LIBNSYS): $(NSYSTEM) $(MAKELIB)
+$(OBJS): ../include/nSystem.h nSysimp.h
+
+$(LIBNSYS): $(OBJS) $(MAKELIB)
 	rm -rf $(LIBNSYS)
-	sh $(MAKELIB) $@ $(NSYSTEM)
+	sh $(MAKELIB) $@ $(OBJS)
 
 clean:
 	rm -f *.o *~

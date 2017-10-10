@@ -110,6 +110,28 @@ void nWaitCondition(nCondition cond);    /* operacion Wait */
 void nSignalCondition(nCondition cond);  /* operacion Signal */
 
 /*************************************************************
+ * Los left/right locks
+ *************************************************************/
+
+#ifndef NOVOID_NLRLOCK
+  /* Incluya la linea #define NOVOID_NLRLOCK al comienzo del archivo
+   * nLRLock.c para que compile correctamente.
+   */
+  typedef void* nLRLock;
+#endif
+
+#define LEFT 1
+#define RIGHT 2
+#define NONE 3
+
+nLRLock nMakeLeftRightLock();
+int nHalfLock(nLRLock l, int timeout);
+void nHalfUnlock(nLRLock l, int side);
+int nFullLock(nLRLock l, int timeout);
+void nFullUnlock(nLRLock l);
+void nDestroyLeftRightLock(nLRLock l);
+
+/*************************************************************
  * E/S basica
  *************************************************************/
 
